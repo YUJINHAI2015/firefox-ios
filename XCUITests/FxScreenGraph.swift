@@ -115,6 +115,7 @@ class Action {
     static let ReloadURL = "ReloadURL"
 
     static let TogglePrivateMode = "TogglePrivateBrowing"
+    static let TogglePrivateModeDirectAccess = "TogglePrivateModeDirectAccess"
     static let ToggleRequestDesktopSite = "ToggleRequestDesktopSite"
     static let ToggleNightMode = "ToggleNightMode"
     static let ToggleNoImageMode = "ToggleNoImageMode"
@@ -344,6 +345,10 @@ func createScreenGraph(for test: XCTestCase, with app: XCUIApplication) -> Scree
         screenState.tap(app.buttons["HomePanels.Bookmarks"], to: HomePanel_Bookmarks)
         screenState.tap(app.buttons["HomePanels.History"], to: HomePanel_History)
         screenState.tap(app.buttons["HomePanels.ReadingList"], to: HomePanel_ReadingList)
+
+        screenState.tap(app.buttons["Private Mode"], forAction: Action.TogglePrivateModeDirectAccess, if: "tablet == true") { userState in
+            userState.isPrivate = !userState.isPrivate
+        }
 
         // Workaround to bug Bug 1417522
         if isTablet {

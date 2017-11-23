@@ -142,4 +142,20 @@ class PrivateBrowsingTest: BaseTestCase {
         let numPrivTabsOpen = userState.numTabs
         XCTAssertEqual(numPrivTabsOpen, 1, "The number of tabs is not correct, there should be one private tab")
     }
+
+    func testiPadDirectAccessPrivateMode() {
+        navigator.toggleOn(userState.isPrivate, withAction: Action.TogglePrivateModeDirectAccess)
+
+        // A Tab opens directly in HomePanels view
+        XCTAssertFalse(app.staticTexts["Private Browsing"].exists, "Private Browsing screen is not shown")
+
+        // Open website and check it does not appear under history once going back to regular mode
+        navigator.openURL("http://example.com")
+        navigator.toggleOff(userState.isPrivate, withAction: Action.TogglePrivateModeDirectAccess)
+        navigator.goto(HomePanel_History)
+        waitforExistence(app.tables["History List"])
+        // History without counting Recently Closed and Synced devices
+        let history = app.tables["History List"].cells.count - 2
+        XCTAssertEqual(history, 0, "History list should be empty")
+    }
 }
